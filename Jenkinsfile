@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'python:3.11'
-            args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
 
@@ -33,16 +33,6 @@ pipeline {
                 sh '''
                   . venv/bin/activate
                   pytest --cov=app --cov-report=xml test/
-                '''
-            }
-        }
-
-        stage('Install Java for SonarQube') {
-            steps {
-                sh '''
-                  apt-get update -qq
-                  apt-get install -y --no-install-recommends openjdk-17-jdk-headless
-                  java -version
                 '''
             }
         }
