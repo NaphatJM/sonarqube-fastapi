@@ -40,10 +40,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    sh '''
-                      . venv/bin/activate
-                      sonar-scanner
-                    '''
+                    sh "${tool 'sonarqube'}/bin/sonar-scanner"
                 }
             }
         }
