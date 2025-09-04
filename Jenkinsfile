@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'python:3.11'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
+            args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
 
@@ -36,6 +36,7 @@ pipeline {
                 '''
             }
         }
+
         stage('Install Java for SonarQube') {
             steps {
                 sh '''
@@ -45,10 +46,14 @@ pipeline {
                 '''
             }
         }
+
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    sh "${tool 'sonarqube-scanner'}/bin/sonar-scanner"
+                    sh '''
+                      export PATH="${tool 'sonarqube-scanner'}/bin:$PATH"
+                      sonar-scanner
+                    '''
                 }
             }
         }
@@ -63,7 +68,7 @@ pipeline {
             steps {
                 sh '''
                   docker rm -f fastapi-app || true
-                  docker run -d -p 8000:8000 --name fastapi-app fastapi-app:latest
+                  docker run -d --restart unless-stopped -p 8000:8000 --name fastapi-app fastapi-app:latest
                 '''
             }
         }
