@@ -3,6 +3,7 @@
 from fastapi import FastAPI, HTTPException, Query
 from typing import List
 from app.utils import calculate_average, reverse_string
+import os  # Unused import - Code Smell #1
 
 app = FastAPI(
     title="FastAPI Clean Code Example",
@@ -29,3 +30,9 @@ def get_average(numbers: List[float] = Query(..., description="List ของต
 def get_reverse(text: str = Query(..., description="ข้อความที่ต้องการกลับ")):
     result = reverse_string(text)
     return {"reversed": result}
+
+
+# Code Smell #2: Dead/Unreachable code
+def unused_function():
+    """This function is never called - dead code"""
+    return "This function is not used anywhere"
