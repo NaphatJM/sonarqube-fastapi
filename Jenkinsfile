@@ -88,7 +88,7 @@ pipeline {
             steps {
                 sh '''
                   docker rm -f fastapi-app || true
-                  docker run -d --restart unless-stopped -p 8000:8000 --name fastapi-app fastapi-app:latest
+                  docker run -d --restart unless-stopped -p 8765:8000 --name fastapi-app fastapi-app:latest
                 '''
             }
         }
