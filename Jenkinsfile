@@ -41,7 +41,7 @@ pipeline {
             steps {
                 sh '''
                   apt-get update -qq
-                  apt-get install -y --no-install-recommends openjdk-17-jre
+                  apt-get install -y --no-install-recommends openjdk-17-jdk-headless
                   java -version
                 '''
             }
