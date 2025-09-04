@@ -26,6 +26,18 @@ def test_average_empty_list():
     assert response.status_code == 422  # missing query parameter
 
 
+def test_average_with_empty_numbers():
+    # Test when numbers parameter is provided but empty
+    response = client.get("/average?numbers=")
+    assert response.status_code == 422
+
+
+def test_average_with_invalid_numbers():
+    # Test error handling for invalid input
+    response = client.get("/average?numbers=abc")
+    assert response.status_code == 422
+
+
 def test_reverse_string():
     response = client.get("/reverse?text=SonarQube")
     assert response.status_code == 200

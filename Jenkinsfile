@@ -3,29 +3,28 @@ pipeline {
         docker { image 'python:3.11' args '-v /var/run/docker.sock:/var/run/docker.sock' }
     }
     environment {
-        SONARQUBE = credentials('sonar-token')
+        SONARQUBE = credentials('sonarqube-token')
     }
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/<username>/<repo>.git'
+                git branch: 'main', url: 'https://github.com/NaphatJM/sonarqube-fastapi.git'
             }
         }
         stage('Install Dependencies') {
             steps {
                 sh 'pip install --upgrade pip'
                 sh 'pip install -r requirements.txt'
-                sh 'pip install sonar-scanner coverage'
             }
         }
         stage('Run Tests & Coverage') {
             steps {
-                sh 'pytest --cov=app tests/'
+                sh 'pytest --cov=app --cov-report=xml test/'
             }
         }
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarQube') {
+                withSonarQubeEnv('sonarqube') {
                     sh 'sonar-scanner'
                 }
             }
