@@ -17,6 +17,16 @@ pipeline {
             }
         }
 
+        stage('Install Java') {
+            steps {
+                sh '''
+                  apt-get update
+                  apt-get install -y openjdk-17-jre
+                  java -version
+                '''
+            }
+        }
+        
         stage('Setup Virtualenv & Install Dependencies') {
             steps {
                 sh '''
@@ -27,6 +37,7 @@ pipeline {
                 '''
             }
         }
+        
 
         stage('Run Tests & Coverage') {
             steps {
