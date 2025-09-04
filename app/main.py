@@ -35,4 +35,3 @@ def get_reverse(text: str = Query(..., description="ข้อความที�
 # Code Smell #2: Dead/Unreachable code
 def unused_function():
     """This function is never called - dead code"""
-    return "This function is not used anywhere"
