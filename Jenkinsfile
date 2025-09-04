@@ -40,10 +40,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    sh '''
-                      export PATH="${tool 'sonarqube-scanner'}/bin:$PATH"
-                      sonar-scanner
-                    '''
+                    sh "${tool 'sonarqube-scanner'}/bin/sonar-scanner"
                 }
             }
         }
