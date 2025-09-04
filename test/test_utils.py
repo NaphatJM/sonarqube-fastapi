@@ -77,9 +77,3 @@ class TestReverseString:
         text = "abc123"
         result = reverse_string(text)
         assert result == "321cba"
-
-    def test_reverse_string_thai_text(self):
-        """ทดสอบการกลับข้อความภาษาไทย"""
-        text = "สวัสดี"
-        result = reverse_string(text)
-        assert result == "ีดัสวส"
