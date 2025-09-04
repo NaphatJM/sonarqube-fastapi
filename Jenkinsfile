@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'python:3.11'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
+            args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
 
@@ -26,7 +26,6 @@ pipeline {
                 '''
             }
         }
-        
         stage('Setup Virtualenv & Install Dependencies') {
             steps {
                 sh '''
