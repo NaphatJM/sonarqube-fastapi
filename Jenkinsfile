@@ -67,18 +67,17 @@ pipeline {
             }
         }
 
-        // stage('Install Docker CLI') {
-        //     steps {
-        //         sh '''
-        //         apt-get update -qq
-        //         apt-get install -y docker.io
-        //         docker --version
-        //         '''
-        //     }
-        // }
+        stage('Install Docker CLI') {
+            steps {
+                sh '''
+                apt-get update -qq
+                apt-get install -y docker.io
+                docker --version
+                '''
+            }
+        }
 
         stage('Build Docker Image') {
-            agent any
             steps {
                 sh 'docker build -t fastapi-app:latest .'
             }
