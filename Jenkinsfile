@@ -21,7 +21,7 @@ pipeline {
             steps {
                 sh '''
                   apt-get update
-                  apt-get install -y openjdk-17-jre
+                  apt-get install -y --no-install-recommends openjdk-17-jdk
                   java -version
                 '''
             }
