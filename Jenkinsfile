@@ -17,22 +17,33 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Setup Virtualenv & Install Dependencies') {
             steps {
-                sh 'pip install --user -r requirements.txt'
+                sh '''
+                  python -m venv venv
+                  . venv/bin/activate
+                  pip install --upgrade pip
+                  pip install -r requirements.txt
+                '''
             }
         }
 
         stage('Run Tests & Coverage') {
             steps {
-                sh 'pytest --cov=app --cov-report=xml test/'
+                sh '''
+                  . venv/bin/activate
+                  pytest --cov=app --cov-report=xml test/
+                '''
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    sh 'sonar-scanner'
+                    sh '''
+                      . venv/bin/activate
+                      sonar-scanner
+                    '''
                 }
             }
         }
@@ -45,7 +56,10 @@ pipeline {
 
         stage('Deploy Container') {
             steps {
-                sh 'docker run -d -p 8000:8000 --name fastapi-app fastapi-app:latest'
+                sh '''
+                  docker rm -f fastapi-app || true
+                  docker run -d -p 8000:8000 --name fastapi-app fastapi-app:latest
+                '''
             }
         }
     }
