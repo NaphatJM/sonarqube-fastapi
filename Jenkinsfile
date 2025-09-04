@@ -20,16 +20,24 @@ pipeline {
         stage('Install Java') {
             steps {
                 sh '''
-                    apt-get update -qq
-                    apt-get install -y wget gnupg lsb-release
-                    wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | apt-key add -
-                    echo "deb https://packages.adoptium.net/artifactory/deb $(lsb_release -sc) main" > /etc/apt/sources.list.d/adoptium.list
-                    apt-get update -qq
-                    apt-get install -y temurin-17-jdk
-                    java -version
+                apt-get update -qq
+                apt-get install -y wget gnupg lsb-release
+
+            
+                wget -O- https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor -o /usr/share/keyrings/adoptium.gpg
+
+                
+                echo "deb [signed-by=/usr/share/keyrings/adoptium.gpg] https://packages.adoptium.net/artifactory/deb $(lsb_release -sc) main" > /etc/apt/sources.list.d/adoptium.list
+
+                
+                apt-get update -qq
+                apt-get install -y temurin-17-jdk
+
+                java -version
                 '''
             }
         }
+
         stage('Setup Virtualenv & Install Dependencies') {
             steps {
                 sh '''
