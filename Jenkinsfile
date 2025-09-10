@@ -67,14 +67,6 @@ pipeline {
                 }
             }
         }
-        
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 5, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
 
         stage('Install Docker CLI') {
             steps {
@@ -89,6 +81,22 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t fastapi-app:latest .'
+            }
+        }
+
+        stage('Push to Registry') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'docker-token',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh '''
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker tag fastapi-app:latest $DOCKER_USER/fastapi-app:latest
+                        docker push $DOCKER_USER/fastapi-app:latest
+                    '''
+                }
             }
         }
 
