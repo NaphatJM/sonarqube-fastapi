@@ -13,8 +13,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'features', url: 'https://github.com/NaphatJM/sonarqube-fastapi.git'
-                sh 'echo "checkout from features branch"'
+                git branch: 'main', url: 'https://github.com/NaphatJM/sonarqube-fastapi.git'
             }
         }
 
