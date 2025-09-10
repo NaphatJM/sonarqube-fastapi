@@ -29,3 +29,9 @@ def get_average(numbers: List[float] = Query(..., description="List ของต
 def get_reverse(text: str = Query(..., description="ข้อความที่ต้องการกลับ")):
     result = reverse_string(text)
     return {"reversed": result}
+
+
+# TODO: code smell #1
+# Code Smell #2: Dead/Unreachable code
+def unused_function(x):
+    y = x * 2

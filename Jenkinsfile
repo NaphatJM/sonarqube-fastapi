@@ -13,7 +13,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/NaphatJM/sonarqube-fastapi.git'
+                git branch: 'features', url: 'https://github.com/NaphatJM/sonarqube-fastapi.git'
+                sh 'echo "checkout from features branch"'
             }
         }
 
@@ -83,11 +84,27 @@ pipeline {
             }
         }
 
+        stage('Push to Registry') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'docker-token',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh '''
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker tag fastapi-app:latest $DOCKER_USER/fastapi-app:latest
+                        docker push $DOCKER_USER/fastapi-app:latest
+                    '''
+                }
+            }
+        }
+
         stage('Deploy Container') {
             steps {
                 sh '''
                   docker rm -f fastapi-app || true
-                  docker run -d --restart unless-stopped -p 8000:8000 --name fastapi-app fastapi-app:latest
+                  docker run -d --restart unless-stopped -p 8765:8000 --name fastapi-app fastapi-app:latest
                 '''
             }
         }
